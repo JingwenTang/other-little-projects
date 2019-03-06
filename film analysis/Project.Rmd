@@ -1,0 +1,86 @@
+---
+title: "Untitled"
+author: "Chen Zihao 915490404"
+date: "2017年12月9日"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE#fig.width=5,fig.height=3.5,fig.align='center'
+                      ,fig.path='Figs/'
+                      )
+```
+
+1.	Introduction
+
+2.	A description of
+(i)	the relevant background of the topic;  
+(ii)	questions of interest
+(iii)	the motivation of the project i.e., why other people should be interested.
+You should also briefly describe the data.
+
+3.	Methods and Results:
+4.	Conclusions and Discussion
+5.	Appendices
+6.	References
+
+```{r}
+Data=read.csv('G:/movie_metadata.csv',header=TRUE)
+```
+
+Replace the missing values in the variable frame by ’NA’ and drop the old class ‘’.
+```{r}
+Data=Data[,-c(2,7,11,12,15,17,18)]#delete all the names
+summary(Data)
+```
+
+
+```{r}
+
+sapply(Data,class)#to check which variable is a factor
+
+#repalce ’’ with NA for all the factor variable
+is.na(Data$color)=which(Data$color=='') 
+is.na(Data$language)=which(Data$language=='')
+is.na(Data$genres)=which(Data$genres=='')
+is.na(Data$country)=which(Data$country=='')
+is.na(Data$content_rating)=which(Data$content_rating=='')
+
+Data$color=droplevels(Data$color)
+Data$language=droplevels(Data$language)
+Data$genres=droplevels(Data$genres)
+Data$country=droplevels(Data$country)
+Data$content_rating=droplevels(Data$content_rating)
+```
+
+
+```{r}
+#Action	Adventure	Fantasy	Sci-Fi Thriller Documentary	Romance	Animation	Comedy Family	Musical	Mystery	Western	Drama	History Sport	Crime	Horror War Biography Music....but
+#ignore the genres with small number. there are 1 Game-Show 2 Reality-TV 3 News 5 Short 6 Film-Noir 		
+Data$Action=sapply(Data$genres,function(x){grepl(x,'Action')})
+Data$Adventure=sapply(Data$genres,function(x){grepl(x,'Adventure')})
+Data$Fantasy=sapply(Data$genres,function(x){grepl(x,'Fantasy')})
+Data$Sci.Fi=sapply(Data$genres,function(x){grepl(x,'Sci-Fi')})
+Data$Thriller=sapply(Data$genres,function(x){grepl(x,'Thriller')})
+Data$Documentary=sapply(Data$genres,function(x){grepl(x,'Documentary')})
+Data$Romance=sapply(Data$genres,function(x){grepl(x,'Romance')})
+Data$Animation=sapply(Data$genres,function(x){grepl(x,'Animation')})
+Data$Comedy=sapply(Data$genres,function(x){grepl(x,'Comedy')})
+Data$Family=sapply(Data$genres,function(x){grepl(x,'Family')})
+Data$Musical=sapply(Data$genres,function(x){grepl(x,'Musical')})
+Data$Mystery=sapply(Data$genres,function(x){grepl(x,'Mystery')})
+Data$Western=sapply(Data$genres,function(x){grepl(x,'Western')})
+Data$Drama=sapply(Data$genres,function(x){grepl(x,'Drama')})
+Data$History=sapply(Data$genres,function(x){grepl(x,'History')})
+Data$Sport=sapply(Data$genres,function(x){grepl(x,'Sport')})
+Data$Crime=sapply(Data$genres,function(x){grepl(x,'Crime')})
+Data$Horror=sapply(Data$genres,function(x){grepl(x,'Horror')})
+Data$War=sapply(Data$genres,function(x){grepl(x,'War')})
+Data$Biography=sapply(Data$genres,function(x){grepl(x,'Biography')})
+Data$Music=sapply(Data$genres,function(x){grepl(x,'Music')})
+```
+
+```{r}
+Data=Data[,-8]
+a=lm(gross~.,data=Data)
+summary(a)
+```
